@@ -4,64 +4,65 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  /* Changed to all black theme */
-  --background: #000000;
+  /* Hacker House Goa design tokens (from hhgoa.com + DESIGN.md) */
+  --background: #0b6839;
   --foreground: #ffffff;
-  --card: #000000;
+  --card: #0b6839;
   --card-foreground: #ffffff;
-  --popover: #000000;
+  --popover: #0b6839;
   --popover-foreground: #ffffff;
-  --primary: #ffffff;
+  --primary: #fee101;
   --primary-foreground: #000000;
-  --secondary: #111111;
+  --secondary: #0a5730;
   --secondary-foreground: #ffffff;
-  --muted: #0a0a0a;
-  --muted-foreground: #999999;
-  --accent: #1a1a1a;
+  --muted: #0a5730;
+  --muted-foreground: #cfe8d8;
+  --accent: #ff0080;
   --accent-foreground: #ffffff;
-  --destructive: #ffffff;
-  --destructive-foreground: #000000;
-  --border: #333333;
-  --input: #000000;
-  --ring: #ffffff;
-  /* Removed chart-* variables - chart component deleted */
-  --radius: 0rem;
+  --destructive: #ff0080;
+  --destructive-foreground: #ffffff;
+  --border: #ffffff2e;
+  --input: #ffffff2e;
+  --ring: #fee101;
+  --radius: 0.625rem;
   /* Removed sidebar-* variables - sidebar component deleted */
-  --font-inter: "Inter", sans-serif;
-  --font-jetbrains-mono: "JetBrains Mono", monospace;
+  --font-imbue: "Imbue", "Inter", sans-serif;
+  --font-victor-mono: "Victor Mono", "JetBrains Mono", monospace;
 }
 
 .dark {
-  /* Dark mode now same as light mode since everything is black */
-  --background: #000000;
+  /* Hacker House Goa design tokens (from hhgoa.com + DESIGN.md) */
+  --background: #0b6839;
   --foreground: #ffffff;
-  --card: #000000;
+  --card: #0b6839;
   --card-foreground: #ffffff;
-  --popover: #000000;
+  --popover: #0b6839;
   --popover-foreground: #ffffff;
-  --primary: #ffffff;
+  --primary: #fee101;
   --primary-foreground: #000000;
-  --secondary: #111111;
+  --secondary: #0a5730;
   --secondary-foreground: #ffffff;
-  --muted: #0a0a0a;
-  --muted-foreground: #999999;
-  --accent: #1a1a1a;
+  --muted: #0a5730;
+  --muted-foreground: #cfe8d8;
+  --accent: #ff0080;
   --accent-foreground: #ffffff;
-  --destructive: #ffffff;
-  --destructive-foreground: #000000;
-  --border: #333333;
-  --input: #000000;
-  --ring: #ffffff;
-  /* Removed chart-* variables - chart component deleted */
+  --destructive: #ff0080;
+  --destructive-foreground: #ffffff;
+  --border: #ffffff2e;
+  --input: #ffffff2e;
+  --ring: #fee101;
+  --radius: 0.625rem;
   /* Removed sidebar-* variables - sidebar component deleted */
-  --font-inter: "Inter", sans-serif;
-  --font-jetbrains-mono: "JetBrains Mono", monospace;
+  --font-imbue: "Imbue", "Inter", sans-serif;
+  --font-victor-mono: "Victor Mono", "JetBrains Mono", monospace;
 }
 
 @theme inline {
-  /* Updated font variables to use new Inter and JetBrains Mono fonts */
-  --font-sans: var(--font-inter);
-  --font-mono: var(--font-jetbrains-mono);
+  /* HH Goa typography: Imbue (display) + Victor Mono (body) */
+  --font-sans: var(--font-imbue);
+  --font-mono: var(--font-victor-mono);
+  --font-heading: var(--font-imbue);
+  --font-body: var(--font-victor-mono);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -81,6 +82,15 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
+  /* HH Goa brand tokens (mapped from hhgoa.com + DESIGN.md) */
+  --color-brand-primary: #0b6839;
+  --color-brand-forest-deep: #0a5730;
+  --color-brand-accent: #fee101;
+  --color-brand-golden: #edd723;
+  --color-brand-pink: #ff0080;
+  --color-brand-white: #ffffff;
+  --color-brand-offwhite: #fffbe8;
+  --color-brand-black: #000000;
   /* Removed chart color mappings - chart component deleted */
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
@@ -93,15 +103,16 @@
   * {
     @apply border-border outline-ring/50;
   }
-  
-  /* Force black background on html and body to prevent flashes */
+
+  /* HH Goa forest green canvas */
   html {
-    background-color: #000000 !important;
+    background-color: #0b6839 !important;
   }
-  
+
   body {
     @apply bg-background text-foreground;
-    background-color: #000000 !important;
+    background-color: #0b6839 !important;
+    font-family: var(--font-jetbrains-mono), monospace;
   }
   
   /* Optimize background shader rendering with containment and hardware acceleration */
@@ -139,10 +150,69 @@
     min-height: 100vh;
     position: relative;
   }
-  
+
   .gpu-accelerate {
     transform: translateZ(0);
     backface-visibility: hidden;
     perspective: 1000px;
+  }
+
+  /* HH Goa CTA glow (flat yellow button with subtle yellow glow) */
+  .cta-button-glow {
+    box-shadow: 0 0 24px rgba(254, 225, 1, 0.45), 0 0 60px rgba(254, 225, 1, 0.2);
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+  }
+  .cta-button-glow:hover {
+    box-shadow: 0 0 40px rgba(254, 225, 1, 0.7), 0 0 80px rgba(254, 225, 1, 0.35);
+    transform: translateY(-1px);
+  }
+
+  /* Dashed pink "ticket" border used on the Devcon-style pass card */
+  .hhgoa-ticket-border {
+    border: 3px dashed rgba(255, 0, 128, 0.7);
+  }
+
+  /* Subtle film grain overlay */
+  .hhgoa-grain::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 50;
+    opacity: 0.05;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 200px 200px;
+  }
+
+  /* Marquee animation for ticker strips */
+  @keyframes hhgoa-marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+  .hhgoa-marquee {
+    animation: hhgoa-marquee 30s linear infinite;
+  }
+
+  /* Slow float for hero palm/illustration elements */
+  @keyframes hhgoa-float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+  .hhgoa-float {
+    animation: hhgoa-float 5s ease-in-out infinite;
+  }
+
+  /* Blinking "LIVE" cursor dot */
+  @keyframes hhgoa-blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.15; }
+  }
+  .hhgoa-blink {
+    animation: hhgoa-blink 1.2s steps(2, start) infinite;
+  }
+
+  /* Sunset glow (radial) for hero sections */
+  .hhgoa-sunset-glow {
+    background: radial-gradient(ellipse at 50% 110%, rgba(254, 225, 1, 0.28) 0%, rgba(255, 0, 128, 0.12) 45%, transparent 70%);
   }
 }
