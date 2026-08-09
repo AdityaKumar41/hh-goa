@@ -5,6 +5,7 @@ import { useCallback, useEffect, useState } from "react"
 export interface HistoryItem {
   id: string
   dataUrl: string
+  cardUrl?: string
   format: "idcard" | "pfp"
   name: string
   stack: string

@@ -108,15 +108,17 @@ export function HhGoaStudio() {
   }, [resultUrl, format])
 
   const handleView = useCallback(
-    (item?: { dataUrl: string; format: Format; name: string; stack: string; accent: "yellow" | "pink" }) => {
-      // Open the card's actual shareable link (permanent blob URL + params),
-      // the same URL that gets shared on X. If no blob URL yet (not generated),
-      // fall back to the OG-based /c link so it still opens a real card page.
+    (item?: { cardUrl?: string; dataUrl: string; format: Format; name: string; stack: string; accent: "yellow" | "pink" }) => {
+      // Always open OUR OWN /c page — never the raw blob URL. The /c page
+      // shows the card (using the blob image when available) and carries
+      // the OG metadata used for the X preview.
       const viewName = (item?.name ?? name).trim() || "Builder"
       const viewStack = (item?.stack ?? stack).trim() || "Terminal Citizen"
       const viewFormat = item?.format ?? format
-      const cardUrlBase = cardUrl
-        ? `/c?img=${encodeURIComponent(cardUrl)}&t=${encodeURIComponent(viewName)}&s=${encodeURIComponent(viewStack)}&f=${viewFormat}`
+      const itemBlobUrl = item?.cardUrl
+      const blobUrl = itemBlobUrl ?? cardUrl
+      const cardUrlBase = blobUrl
+        ? `/c?img=${encodeURIComponent(blobUrl)}&t=${encodeURIComponent(viewName)}&s=${encodeURIComponent(viewStack)}&f=${viewFormat}`
         : `/c?t=${encodeURIComponent(viewName)}&s=${encodeURIComponent(viewStack)}&f=${viewFormat}`
       window.open(cardUrlBase, "_blank", "noopener,noreferrer")
     },
@@ -124,13 +126,17 @@ export function HhGoaStudio() {
   )
 
   const handleShare = useCallback(
-    (item?: { dataUrl: string; format: Format; name: string; stack: string; accent: "yellow" | "pink" }) => {
+    (item?: { cardUrl?: string; dataUrl: string; format: Format; name: string; stack: string; accent: "yellow" | "pink" }) => {
       if (!resultUrl && !item) return
       const shareName = (item?.name ?? name).trim() || "Builder"
       const shareStack = (item?.stack ?? stack).trim() || "Terminal Citizen"
       const shareFormat = item?.format ?? format
-      const cardUrlBase = cardUrl
-        ? `/c?img=${encodeURIComponent(cardUrl)}&t=${encodeURIComponent(shareName)}&s=${encodeURIComponent(shareStack)}&f=${shareFormat}`
+      // Share OUR OWN /c link. The /c page serves the card image through
+      // its OG metadata, so X auto-embeds the card in the tweet preview.
+      const itemBlobUrl = item?.cardUrl
+      const blobUrl = itemBlobUrl ?? cardUrl
+      const cardUrlBase = blobUrl
+        ? `/c?img=${encodeURIComponent(blobUrl)}&t=${encodeURIComponent(shareName)}&s=${encodeURIComponent(shareStack)}&f=${shareFormat}`
         : `/c?t=${encodeURIComponent(shareName)}&s=${encodeURIComponent(shareStack)}&f=${shareFormat}`
       const shareLink = `${window.location.origin}${cardUrlBase}`
       const label = shareFormat === "idcard" ? "my HH Goa 2026 Builder ID" : "my HH Goa 2026 profile frame"
@@ -144,6 +150,7 @@ export function HhGoaStudio() {
     if (!resultUrl || status === "processing") return
     setStatus("processing")
     setErrorMsg(null)
+    let uploadedUrl: string | null = null
     try {
       // Persist the card to blob storage -> it gets its own permanent URL
       const res = await fetch("/api/upload-card", {
@@ -153,6 +160,7 @@ export function HhGoaStudio() {
       })
       if (!res.ok) throw new Error("upload failed")
       const { url } = await res.json()
+      uploadedUrl = url
       setCardUrl(url)
       setGenerated(true)
       setStatus("ready")
@@ -162,9 +170,9 @@ export function HhGoaStudio() {
       setGenerated(true)
       setStatus("ready")
     }
-    // Save the generated card to local history (works whether or not the
-    // blob upload succeeded — the data URL is always available locally).
-    addToHistory({ dataUrl: resultUrl, format, name, stack, accent })
+    // Save the generated card to local history with its blob URL so the
+    // View / Share actions open the actual hosted image, not a re-render.
+    addToHistory({ dataUrl: resultUrl, cardUrl: uploadedUrl ?? undefined, format, name, stack, accent })
   }, [resultUrl, status, format, name, stack, accent, addToHistory])
 
   const handleReset = useCallback(() => {
